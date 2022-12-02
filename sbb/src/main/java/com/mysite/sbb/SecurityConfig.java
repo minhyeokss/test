@@ -22,38 +22,29 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-	
-	private final UserSecurityService userSecurityService;
-	
+
+    private final UserSecurityService userSecurityService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll()
-        	.and()
-        		.csrf().ignoringAntMatchers("/h2-console/**")
-        	.and()
-        		.headers()
-        		.addHeaderWriter(new XFrameOptionsHeaderWriter(
-        				XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
-        	.and()
-               	.formLogin()
-               	.loginPage("/user/login")
-               	.defaultSuccessUrl("/")
-            .and()
-                .logout()
+        http.authorizeRequests().antMatchers("/**").permitAll().and().csrf()
+                .ignoringAntMatchers("/h2-console/**").and().headers()
+                .addHeaderWriter(new XFrameOptionsHeaderWriter(
+                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+                .and().formLogin().loginPage("/user/login").defaultSuccessUrl("/").and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-            ;
+                .logoutSuccessUrl("/").invalidateHttpSession(true);
         return http.build();
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
