@@ -13,11 +13,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-
     private final UserRepository userRepository;
+
     private final ModelMapper modelMapper;
+
     private final PasswordEncoder passwordEncoder;
-    
+
     private SiteUserDto of(SiteUser siteUser) {
         return this.modelMapper.map(siteUser, SiteUserDto.class);
     }
@@ -30,7 +31,7 @@ public class UserService {
         this.userRepository.save(user);
         return of(user);
     }
-    
+
     public SiteUserDto getUser(String username) {
         Optional<SiteUser> siteUser = this.userRepository.findByusername(username);
         if (siteUser.isPresent()) {

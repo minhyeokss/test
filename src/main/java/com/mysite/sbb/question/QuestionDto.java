@@ -14,11 +14,18 @@ import lombok.Setter;
 @Setter
 public class QuestionDto {
     private Integer id;
+
     private String subject;
+
     private String content;
+
     private LocalDateTime createDate;
+
     private List<AnswerDto> answerList;
+
     private SiteUserDto author;
+
     private LocalDateTime modifyDate;
+
     private Set<SiteUserDto> voter;
 }

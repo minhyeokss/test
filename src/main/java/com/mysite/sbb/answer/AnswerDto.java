@@ -13,10 +13,16 @@ import lombok.Setter;
 @Setter
 public class AnswerDto {
     private Integer id;
+
     private String content;
+
     private LocalDateTime createDate;
+
     private QuestionDto question;
+
     private SiteUserDto author;
+
     private LocalDateTime modifyDate;
+
     private Set<SiteUserDto> voter;
 }

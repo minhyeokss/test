@@ -29,8 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Controller
 public class QuestionController {
-
     private final QuestionService questionService;
+
     private final UserService userService;
 
     @RequestMapping("/list")
@@ -58,31 +58,33 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, 
-            BindingResult bindingResult, Principal principal) {
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult,
+            Principal principal) {
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
         SiteUserDto siteUserDto = this.userService.getUser(principal.getName());
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUserDto);
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(),
+                siteUserDto);
         return "redirect:/question/list";
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
+    public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id,
+            Principal principal) {
         QuestionDto questionDto = this.questionService.getQuestion(id);
-        if(!questionDto.getAuthor().getUsername().equals(principal.getName())) {
+        if (!questionDto.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         questionForm.setSubject(questionDto.getSubject());
         questionForm.setContent(questionDto.getContent());
         return "question_form";
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult, 
+    public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult,
             Principal principal, @PathVariable("id") Integer id) {
         if (bindingResult.hasErrors()) {
             return "question_form";
@@ -91,10 +93,11 @@ public class QuestionController {
         if (!questionDto.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        this.questionService.modify(questionDto, questionForm.getSubject(), questionForm.getContent());
+        this.questionService.modify(questionDto, questionForm.getSubject(),
+                questionForm.getContent());
         return String.format("redirect:/question/detail/%s", id);
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
@@ -105,7 +108,7 @@ public class QuestionController {
         this.questionService.delete(questionDto);
         return "redirect:/";
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     public String questionVote(Principal principal, @PathVariable("id") Integer id) {

@@ -38,12 +38,12 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
-    
+
     @ManyToOne
     private SiteUser author;
-    
+
     private LocalDateTime modifyDate;
-    
+
     @ManyToMany
     Set<SiteUser> voter;
 }

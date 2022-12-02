@@ -26,14 +26,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Controller
 public class AnswerController {
-
     private final QuestionService questionService;
+
     private final AnswerService answerService;
+
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
-    public String createAnswer(Model model, @PathVariable("id") Integer id, 
+    public String createAnswer(Model model, @PathVariable("id") Integer id,
             @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
         QuestionDto questionDto = this.questionService.getQuestion(id);
         SiteUserDto siteUserDto = this.userService.getUser(principal.getName());
@@ -41,15 +42,16 @@ public class AnswerController {
             model.addAttribute("question", questionDto);
             return "question_detail";
         }
-        AnswerDto answerDto = this.answerService.create(questionDto, 
-                answerForm.getContent(), siteUserDto);
-        return String.format("redirect:/question/detail/%s#answer_%s", 
+        AnswerDto answerDto =
+                this.answerService.create(questionDto, answerForm.getContent(), siteUserDto);
+        return String.format("redirect:/question/detail/%s#answer_%s",
                 answerDto.getQuestion().getId(), answerDto.getId());
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
+    public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id,
+            Principal principal) {
         AnswerDto answerDto = this.answerService.getAnswer(id);
         if (!answerDto.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
@@ -57,7 +59,7 @@ public class AnswerController {
         answerForm.setContent(answerDto.getContent());
         return "answer_form";
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String answerModify(@Valid AnswerForm answerForm, @PathVariable("id") Integer id,
@@ -70,10 +72,10 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.answerService.modify(answerDto, answerForm.getContent());
-        return String.format("redirect:/question/detail/%s#answer_%s", 
+        return String.format("redirect:/question/detail/%s#answer_%s",
                 answerDto.getQuestion().getId(), answerDto.getId());
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String answerDelete(Principal principal, @PathVariable("id") Integer id) {
@@ -84,14 +86,14 @@ public class AnswerController {
         this.answerService.delete(answerDto);
         return String.format("redirect:/question/detail/%s", answerDto.getQuestion().getId());
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     public String answerVote(Principal principal, @PathVariable("id") Integer id) {
         AnswerDto answerDto = this.answerService.getAnswer(id);
         SiteUserDto siteUserDto = this.userService.getUser(principal.getName());
         this.answerService.vote(answerDto, siteUserDto);
-        return String.format("redirect:/question/detail/%s#answer_%s", 
+        return String.format("redirect:/question/detail/%s#answer_%s",
                 answerDto.getQuestion().getId(), answerDto.getId());
     }
 }

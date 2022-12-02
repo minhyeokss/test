@@ -7,7 +7,10 @@ import lombok.Setter;
 @Setter
 public class SiteUserDto {
     private Long id;
+
     private String username;
+
     private String password;
+
     private String email;
 }
