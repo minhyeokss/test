@@ -29,13 +29,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Controller
 public class QuestionController {
-    private final QuestionService questionService;
 
+    private final QuestionService questionService;
     private final UserService userService;
 
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "kw", defaultValue = "") String kw) {
+        page = (page <= 0) ? 0 : (page - 1);
         log.info("page:{}, kw:{}", page, kw);
         Page<QuestionDto> paging = this.questionService.getList(page, kw);
         model.addAttribute("paging", paging);

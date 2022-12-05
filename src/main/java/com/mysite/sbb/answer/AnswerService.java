@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class AnswerService {
-    private final AnswerRepository answerRepository;
 
+    private final AnswerRepository answerRepository;
     private final ModelMapper modelMapper;
 
     private Answer of(AnswerDto answerDto) {

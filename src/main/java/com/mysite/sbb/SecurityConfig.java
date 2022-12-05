@@ -21,17 +21,25 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    
     private final UserSecurityService userSecurityService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll().and().csrf()
-                .ignoringAntMatchers("/h2-console/**").and().headers()
-                .addHeaderWriter(new XFrameOptionsHeaderWriter(
+        http.authorizeRequests().antMatchers("/**").permitAll()
+            .and()
+                .csrf().ignoringAntMatchers("/h2-console/**")
+            .and()
+                .headers().addHeaderWriter(new XFrameOptionsHeaderWriter(
                         XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
-                .and().formLogin().loginPage("/user/login").defaultSuccessUrl("/").and().logout()
+            .and()
+                .formLogin().loginPage("/user/login").defaultSuccessUrl("/")
+            .and()
+                .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/").invalidateHttpSession(true);
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                ;
     }
 
     @Bean

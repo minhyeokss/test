@@ -30,12 +30,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class QuestionService {
-    private final ModelMapper modelMapper;
 
     private final QuestionRepository questionRepository;
+    private final ModelMapper modelMapper;
 
     private Specification<Question> search(String kw) {
         return new Specification<Question>() {
+
             private static final long serialVersionUID = 1L;
 
             @Override

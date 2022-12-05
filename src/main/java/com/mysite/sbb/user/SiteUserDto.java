@@ -13,4 +13,6 @@ public class SiteUserDto {
     private String password;
 
     private String email;
+
+    private String cellphone;
 }

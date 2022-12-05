@@ -1,5 +1,6 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
+    <!-- 질문 -->
     <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
     <div class="card my-3">
         <div class="card-body">
@@ -33,7 +34,9 @@
             </div>
         </div>
     </div>
+    <!-- 답변의 갯수 표시 -->
     <h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
+    <!-- 답변 반복 시작 -->
     <div th:each="answer : ${question.answerList}">
         <a th:id="|answer_${answer.id}|"></a>
         <div class="card my-3">
@@ -69,6 +72,8 @@
             </div>
         </div>
     </div>
+    <!-- 답변 반복 끝  -->
+    <!-- 답변 작성 -->
     <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
         <div th:replace="form_errors :: formErrorsFragment"></div>
         <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control"
